@@ -10,8 +10,9 @@
     "test": [
       "test/Tests.hs"
     ],
-    "exemplar": [
-      ".meta/exemplar/src/GuessingGame.hs"
+    "example": [
+      ".meta/exemplar/src/GuessingGame.hs",
+      ".meta/exemplar/package.yaml"
     ],
     "invalidator": [
       "stack.yaml"

@@ -10,8 +10,9 @@
     "test": [
       "test/Tests.hs"
     ],
-    "exemplar": [
-      ".meta/exemplar/src/LuciansLusciousLasagna.hs"
+    "example": [
+      ".meta/exemplar/src/LuciansLusciousLasagna.hs",
+      ".meta/exemplar/package.yaml"
     ],
     "invalidator": [
       "stack.yaml"
