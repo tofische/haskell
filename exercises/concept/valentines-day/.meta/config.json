@@ -10,7 +10,7 @@
     "test": [
       "test/Tests.hs"
     ],
-    "example": [
+    "exemplar": [
       ".meta/exemplar/src/ValentinesDay.hs",
       ".meta/exemplar/package.yaml"
     ],

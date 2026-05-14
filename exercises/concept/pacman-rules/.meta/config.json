@@ -10,7 +10,7 @@
     "test": [
       "test/Tests.hs"
     ],
-    "example": [
+    "exemplar": [
       ".meta/exemplar/src/PacmanRules.hs",
       ".meta/exemplar/package.yaml"
     ],
