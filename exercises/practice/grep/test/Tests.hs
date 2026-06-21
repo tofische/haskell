@@ -16,7 +16,7 @@ specs = describe "grep" $ for_ cases test
 test testCase@Case{..} =
     around (withFiles files) $
         it description $
-            \files -> grep pattern flags files >>= (\content -> content `shouldBe` expected)
+            \files -> grep string flags files >>= (\content -> content `shouldBe` expected)
 
 withFiles files runTest = do
     sys <- getTemporaryDirectory
@@ -26,7 +26,7 @@ withFiles files runTest = do
     for_ files $ \file -> removeFile (fst file)
 
 data Case = Case { description :: String
-                 , pattern     :: String
+                 , string     :: String
                  , flags       :: [Flag]
                  , files       :: [(String, [String])]
                  , expected    :: [String]
@@ -35,43 +35,43 @@ data Case = Case { description :: String
 cases :: [Case]
 cases =
     [ Case { description = "One file, one match, no flags"
-           , pattern     = "Agamemnon"
+           , string     = "Agamemnon"
            , flags       = []
            , files       = [iliad]
            , expected    = ["Of Atreus, Agamemnon, King of men."]
            }
     , Case { description = "One file, one match, print line numbers flag"
-           , pattern     = "Forbidden"
+           , string     = "Forbidden"
            , flags       = [N]
            , files       = [paradiseLost]
            , expected    = ["2:Of that Forbidden Tree, whose mortal tast"]
            }
     , Case { description = "One file, one match, case-insensitive flag"
-           , pattern     = "FORBIDDEN"
+           , string     = "FORBIDDEN"
            , flags       = [I]
            , files       = [paradiseLost]
            , expected    = ["Of that Forbidden Tree, whose mortal tast"]
            }
     , Case { description = "One file, one match, print file names flag"
-           , pattern     = "Forbidden"
+           , string     = "Forbidden"
            , flags       = [L]
            , files       = [paradiseLost]
            , expected    = ["paradise-lost.txt"]
            }
     , Case { description = "One file, one match, match entire lines flag"
-           , pattern     = "With loss of Eden, till one greater Man"
+           , string     = "With loss of Eden, till one greater Man"
            , flags       = [X]
            , files       = [paradiseLost]
            , expected    = ["With loss of Eden, till one greater Man"]
            }
     , Case { description = "One file, one match, multiple flags"
-           , pattern     = "OF ATREUS, Agamemnon, KIng of MEN."
+           , string     = "OF ATREUS, Agamemnon, KIng of MEN."
            , flags       = [N, I, X]
            , files       = [iliad]
            , expected    = ["9:Of Atreus, Agamemnon, King of men."]
            }
     , Case { description = "One file, several matches, no flags"
-           , pattern     = "may"
+           , string     = "may"
            , flags       = []
            , files       = [midsummerNight]
            , expected    = [
@@ -81,7 +81,7 @@ cases =
                            ]
            }
     , Case { description = "One file, several matches, print line numbers flag"
-           , pattern     = "may"
+           , string     = "may"
            , flags       = [N]
            , files       = [midsummerNight]
            , expected    = [
@@ -91,13 +91,13 @@ cases =
                            ]
            }
     , Case { description = "One file, several matches, match entire lines flag"
-           , pattern     = "may"
+           , string     = "may"
            , flags       = [X]
            , files       = [midsummerNight]
            , expected    = []
            }
     , Case { description = "One file, several matches, case-insensitive flag"
-           , pattern     = "ACHILLES"
+           , string     = "ACHILLES"
            , flags       = [I]
            , files       = [iliad]
            , expected    = [
@@ -106,7 +106,7 @@ cases =
                            ]
            }
     , Case { description = "One file, several matches, inverted flag"
-           , pattern     = "Of"
+           , string     = "Of"
            , flags       = [V]
            , files       = [paradiseLost]
            , expected    = [
@@ -118,19 +118,19 @@ cases =
                            ]
            }
     , Case { description = "One file, no matches, various flags"
-           , pattern     = "Gandalf"
+           , string     = "Gandalf"
            , flags       = [N, L, X, I]
            , files       = [iliad]
            , expected    = []
            }
     , Case { description = "One file, one match, file flag takes precedence over line flag"
-           , pattern     = "ten"
+           , string     = "ten"
            , flags       = [N, L]
            , files       = [iliad]
            , expected    = ["iliad.txt"]
            }
     , Case { description = "One file, several matches, inverted and match entire lines flags"
-           , pattern     = "Illustrious into Ades premature,"
+           , string     = "Illustrious into Ades premature,"
            , flags       = [X, V]
            , files       = [iliad]
            , expected    = [
@@ -145,13 +145,13 @@ cases =
                            ]
            }
     , Case { description = "Multiple files, one match, no flags"
-           , pattern     = "Agamemnon"
+           , string     = "Agamemnon"
            , flags       = []
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = ["iliad.txt:Of Atreus, Agamemnon, King of men."]
            }
     , Case { description = "Multiple files, several matches, no flags"
-           , pattern     = "may"
+           , string     = "may"
            , flags       = []
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = [
@@ -161,7 +161,7 @@ cases =
                            ]
            }
     , Case { description = "Multiple files, several matches, print line numbers flag"
-           , pattern     = "that"
+           , string     = "that"
            , flags       = [N]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = [
@@ -172,13 +172,13 @@ cases =
                            ]
            }
     , Case { description = "Multiple files, one match, print file names flag"
-           , pattern     = "who"
+           , string     = "who"
            , flags       = [L]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = ["iliad.txt", "paradise-lost.txt"]
            }
     , Case { description = "Multiple files, several matches, case-insensitive flag"
-           , pattern     = "TO"
+           , string     = "TO"
            , flags       = [I]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = [
@@ -195,7 +195,7 @@ cases =
                            ]
            }
     , Case { description = "Multiple files, several matches, inverted flag"
-           , pattern     = "a"
+           , string     = "a"
            , flags       = [V]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = [
@@ -205,31 +205,31 @@ cases =
                            ]
            }
     , Case { description = "Multiple files, one match, match entire lines flag"
-           , pattern     = "But I beseech your grace that I may know"
+           , string     = "But I beseech your grace that I may know"
            , flags       = [X]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = ["midsummer-night.txt:But I beseech your grace that I may know"]
            }
     , Case { description = "Multiple files, one match, multiple flags"
-           , pattern     = "WITH LOSS OF EDEN, TILL ONE GREATER MAN"
+           , string     = "WITH LOSS OF EDEN, TILL ONE GREATER MAN"
            , flags       = [N, I, X]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = ["paradise-lost.txt:4:With loss of Eden, till one greater Man"]
            }
     , Case { description = "Multiple files, no matches, various flags"
-           , pattern     = "Frodo"
+           , string     = "Frodo"
            , flags       = [N, L, X, I]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = []
            }
     , Case { description = "Multiple files, several matches, file flag takes precedence over line number flag"
-           , pattern     = "who"
+           , string     = "who"
            , flags       = [N, L]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = ["iliad.txt", "paradise-lost.txt"]
            }
     , Case { description = "Multiple files, several matches, inverted and match entire lines flags"
-           , pattern     = "Illustrious into Ades premature,"
+           , string     = "Illustrious into Ades premature,"
            , flags       = [X, V]
            , files       = [iliad, midsummerNight, paradiseLost]
            , expected    = [
