@@ -1,5 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
+import Control.Monad     ((>=>))
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe, around)
 import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
@@ -16,7 +17,7 @@ specs = describe "grep" $ for_ cases test
 test testCase@Case{..} =
     around (withFiles files) $
         it description $
-            \files -> grep string flags files >>= (\content -> content `shouldBe` expected)
+            grep string flags >=> (`shouldBe` expected)
 
 withFiles files runTest = do
     sys <- getTemporaryDirectory

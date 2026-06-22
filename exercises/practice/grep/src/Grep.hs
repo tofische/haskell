@@ -5,4 +5,4 @@ data Flag = N | L | I | V | X deriving (Eq, Ord)
 type Flags = [Flag]
 
 grep :: String -> Flags -> [FilePath] -> IO [String]
-grep pattern flags files = error "You need to implement this function."
+grep string flags files = error "You need to implement this function."
