@@ -14,7 +14,7 @@ main = hspecWith defaultConfig {configFailFast = True} specs
 specs :: Spec
 specs = describe "grep" $ for_ cases test
     where
-        test testCase@Case{..} =
+        test Case{..} =
             around (withFiles files) $
                 it description $
                     grep string flags >=> (`shouldBe` expected)
@@ -22,7 +22,7 @@ specs = describe "grep" $ for_ cases test
             sys <- getTemporaryDirectory
             setCurrentDirectory sys
             for_ files $ \file -> writeFile (fst file) (unlines $ snd file)
-            runTest $ map fst files
+            _ <- runTest $ map fst files
             for_ files $ \file -> removeFile (fst file)
 
 data Case = Case { description :: String
