@@ -13,18 +13,17 @@ main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "grep" $ for_ cases test
-
-test testCase@Case{..} =
-    around (withFiles files) $
-        it description $
-            grep string flags >=> (`shouldBe` expected)
-
-withFiles files runTest = do
-    sys <- getTemporaryDirectory
-    setCurrentDirectory sys
-    for_ files $ \file -> writeFile (fst file) (unlines $ snd file)
-    runTest $ map fst files
-    for_ files $ \file -> removeFile (fst file)
+    where
+        test testCase@Case{..} =
+            around (withFiles files) $
+                it description $
+                    grep string flags >=> (`shouldBe` expected)
+        withFiles files runTest = do
+            sys <- getTemporaryDirectory
+            setCurrentDirectory sys
+            for_ files $ \file -> writeFile (fst file) (unlines $ snd file)
+            runTest $ map fst files
+            for_ files $ \file -> removeFile (fst file)
 
 data Case = Case { description :: String
                  , string     :: String
@@ -261,6 +260,7 @@ cases =
            }
     ]
 
+iliad :: (String, [String])
 iliad =
        ("iliad.txt", [
               "Achilles sing, O Goddess! Peleus' son;",
@@ -273,6 +273,8 @@ iliad =
               "The noble Chief Achilles from the son",
               "Of Atreus, Agamemnon, King of men."
        ])
+
+midsummerNight :: (String, [String])
 midsummerNight =
        ("midsummer-night.txt", [
               "I do entreat your grace to pardon me.",
@@ -283,6 +285,8 @@ midsummerNight =
               "The worst that may befall me in this case,",
               "If I refuse to wed Demetrius."
        ])
+
+paradiseLost :: (String, [String])
 paradiseLost =
        ("paradise-lost.txt", [
               "Of Mans First Disobedience, and the Fruit",
